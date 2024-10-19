@@ -7,224 +7,45 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-        .header {
-            background-color: orange;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            font-size: 2em;
-        }
-        .survey-output, .input-section, .scoreboard, .timer, .leaderboard {
-            background-color: lightgrey;
-            margin: 20px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .input-section {
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .input-section input {
-            display: block;
-            margin: 10px 0;
-            padding: 10px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        .submit-button, .reset-button {
-            background-color: orange;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 1em;
-            margin: 10px 0;
-        }
-        .scoreboard, .leaderboard {
             display: flex;
-            justify-content: space-around;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
         }
-        .team-score, .team-name {
-            font-size: 1.5em;
+        .title {
+            font-size: 2em;
+            margin-bottom: 20px;
         }
-        .timer {
-            text-align: center;
-            font-size: 1.5em;
-        }
-        .grid-container {
+        .board {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2, 200px);
+            grid-template-rows: repeat(4, 50px);
             gap: 10px;
-            margin: 20px;
         }
-        .grid-item {
-            background-color: white;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 20px;
-            text-align: center;
+        .box {
+            background-color: #fff;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 1.2em;
-            cursor: pointer;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-            position: relative;
-        }
-        .grid-item.flipped {
-            transform: rotateY(180deg);
-        }
-        .grid-item .front, .grid-item .back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-        }
-        .grid-item .back {
-            transform: rotateY(180deg);
-        }
-        @media (max-width: 600px) {
-            .scoreboard, .leaderboard {
-                flex-direction: column;
-                align-items: center;
-            }
-            .grid-container {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="header">Family Feud</div>
-    <div class="scoreboard">
-        <div class="team-name">Team 1: <input type="text" id="team1-name" value="Team 1"></div>
-        <div class="team-score">Score: <span id="team1-score">0</span></div>
-        <div class="team-name">Team 2: <input type="text" id="team2-name" value="Team 2"></div>
-        <div class="team-score">Score: <span id="team2-score">0</span></div>
+    <div class="title">Family Feud</div>
+    <div class="board">
+        <div class="box">1</div>
+        <div class="box">2</div>
+        <div class="box">3</div>
+        <div class="box">4</div>
+        <div class="box">5</div>
+        <div class="box">6</div>
+        <div class="box">7</div>
+        <div class="box">8</div>
     </div>
-    <div class="timer">Time Left: <span id="timer">60</span> seconds</div>
-    <div class="grid-container" id="survey-output">
-        <!-- Survey answers will be displayed here -->
-        <div class="grid-item" onclick="flipCard(this, 1)">
-            <div class="front">1</div>
-            <div class="back" id="answer-1"></div>
-        </div>
-        <div class="grid-item" onclick="flipCard(this, 2)">
-            <div class="front">2</div>
-            <div class="back" id="answer-2"></div>
-        </div>
-        <div class="grid-item" onclick="flipCard(this, 3)">
-            <div class="front">3</div>
-            <div class="back" id="answer-3"></div>
-        </div>
-        <div class="grid-item" onclick="flipCard(this, 4)">
-            <div class="front">4</div>
-            <div class="back" id="answer-4"></div>
-        </div>
-        <div class="grid-item" onclick="flipCard(this, 5)">
-            <div class="front">5</div>
-            <div class="back" id="answer-5"></div>
-        </div>
-        <div class="grid-item" onclick="flipCard(this, 6)">
-            <div class="front">6</div>
-            <div class="back" id="answer-6"></div>
-        </div>
-        <div class="grid-item" onclick="flipCard(this, 7)">
-            <div class="front">7</div>
-            <div class="back" id="answer-7"></div>
-        </div>
-        <div class="grid-item" onclick="flipCard(this, 8)">
-            <div class="front">8</div>
-            <div class="back" id="answer-8"></div>
-        </div>
-    </div>
-    <div class="input-section">
-        <input type="text" id="survey-question" placeholder="Enter survey question">
-        <input type="text" id="survey-answer" placeholder="Enter survey answer">
-        <input type="number" id="survey-points" placeholder="Enter points for answer">
-        <button class="submit-button" onclick="addSurveyAnswer()">Submit</button>
-        <button class="reset-button" onclick="resetScores()">Reset Scores</button>
-    </div>
-    <div class="leaderboard">
-        <div>Leaderboard</div>
-        <div id="leaderboard-output"></div>
-    </div>
-
-    <script>
-        let team1Score = 0;
-        let team2Score = 0;
-        let currentTeam = 1;
-        let timer;
-        let timeLeft = 60;
-        let surveyAnswers = {};
-
-        function startTimer() {
-            timer = setInterval(() => {
-                if (timeLeft > 0) {
-                    timeLeft--;
-                    document.getElementById('timer').textContent = timeLeft;
-                } else {
-                    clearInterval(timer);
-                    alert('Time is up!');
-                    updateLeaderboard();
-                }
-            }, 1000);
-        }
-
-        function addSurveyAnswer() {
-            const question = document.getElementById('survey-question').value;
-            const answer = document.getElementById('survey-answer').value;
-            const points = parseInt(document.getElementById('survey-points').value);
-
-            if (question && answer && points) {
-                const surveyOutput = document.getElementById('survey-output');
-                const newAnswer = document.createElement('p');
-                newAnswer.textContent = `${answer} - ${points} points`;
-                surveyOutput.appendChild(newAnswer);
-
-                surveyAnswers[Object.keys(surveyAnswers).length + 1] = { answer, points };
-
-                // Clear input fields
-                document.getElementById('survey-question').value = '';
-                document.getElementById('survey-answer').value = '';
-                document.getElementById('survey-points').value = '';
-            }
-        }
-
-        function flipCard(element, index) {
-            element.classList.toggle('flipped');
-            if (surveyAnswers[index]) {
-                document.getElementById(`answer-${index}`).textContent = `${surveyAnswers[index].answer} - ${surveyAnswers[index].points} points`;
-            }
-        }
-
-        function resetScores() {
-            team1Score = 0;
-            team2Score = 0;
-            document.getElementById('team1-score').textContent = team1Score;
-            document.getElementById('team2-score').textContent = team2Score;
-            document.getElementById('survey-output').innerHTML = '';
-            clearInterval(timer);
-            timeLeft = 60;
-            document.getElementById('timer').textContent = timeLeft;
-            startTimer();
-        }
-
-        function updateLeaderboard() {
-            const team1Name = document.getElementById('team1-name').value;
-            const team2Name = document.getElementById('team2-name').value;
-            const leaderboardOutput = document.getElementById('leaderboard-output');
-            leaderboardOutput.innerHTML = `
-                <p>${team1Name}: ${team1Score} points</p>
-                <p>${team2Name}: ${team2Score} points</p>
-            `;
-        }
-
-        // Start the timer when the page loads
-        window.onload = startTimer;
-    </script>
 </body>
 </html>
